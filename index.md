@@ -3,4 +3,7 @@ layout: default
 ---
 
 ## Blogs
-[rhh850](blogs\2020\02\14\rh850-voltage-glitching.html)
+[rhh850](\2020\02\14\rh850-voltage-glitching.html)
+
+
+[rh8502]({% post_url 2024-05-08-rh850-voltage-glitching %}){:target="_blank"}
