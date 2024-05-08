@@ -1,0 +1,20 @@
+author:
+  name: Jerin Sunny
+
+url: https://jerinsunny.github.io
+
+baseurl: /
+
+
+owner : Jerin Sunny
+year: 2024
+date: 10-04-2024
+
+
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-paginate
+  - jekyll-sitemap ## Uncomment this line to silently generate a sitemaps.org compliant sitemap for your Jekyll site
+
+
