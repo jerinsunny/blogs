@@ -1,9 +1,10 @@
 author:
   name: Jerin Sunny
 
-url: https://jerinsunny.github.io
+url: https://jerinsunny.github.io/blogs
 
-baseurl: /blogs
+baseurl: /
+destination: ./_site
 
 
 owner : Jerin Sunny
