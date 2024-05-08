@@ -7,3 +7,5 @@ layout: default
 
 
 [rh8502]({% post_url 2024-05-08-rh850-voltage-glitching %}){:target="_blank"}
+
+[blog](https://jerinsunny.github.io/blogs/2020/02/14/rh850-voltage-glitching.html)
