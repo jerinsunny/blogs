@@ -11,6 +11,7 @@ group :jekyll_plugins do
     gem "jekyll-seo-tag"
     gem "jekyll-paginate", "~> 1.1.0"
     gem "jekyll-sitemap"
+    gem 'jekyll-figure'
 end
 
 
