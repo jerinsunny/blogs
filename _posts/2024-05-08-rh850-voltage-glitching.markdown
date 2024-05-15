@@ -167,7 +167,7 @@ With modified circuitry in place, and fine tuning the glitch paramters, finally 
   <source src="../../../assets/rh850_vglitch/gifs/rh850_mem_read.webm" type="video/webm" />
 </video>
 
- One of the obseravtion was that there is no authentication check for each memory read command, once the ID Code authentication is bypassed data from all the memory region could be read without the need for further authentication. But still the whole memory region could not be read with one successful glitch and  multiple glitches were required to extract the data from the whole memory region, as the target stops responding in between memory read. But as compared to STM MCUs where each memory read command required authentication to be bypassed as described in the previous blog, our target MCU(RH850) required way less successful glitches.
+ One of the obseravtion was that there is no authentication check for each memory read command, once the ID Code authentication is bypassed data from all the memory region could be read without the need for further authentication. But still the whole memory region could not be read with one successful glitch and  multiple glitches were required to extract the data from the whole memory region, as the target stops responding in between memory read. But as compared to STM MCUs where each memory read command required authentication to be bypassed as described in the previous [blog](https://jerinsunny.github.io/stm32_vglitch/), our target MCU(RH850) required way less successful glitches.
 
 As mentioned above the 2 wire uart protocol communication happens over a series of commands. Once the whole data from code flash and data flash was extracted, we compared the checksum of the data received and packed the data into a binary file by removing the command metadata used by RFP tool as shown in the below figure.
 
@@ -178,14 +178,13 @@ As mentioned above the 2 wire uart protocol communication happens over a series 
 
 
 * * *
-<!-- ### Authors -->
 ### This research was carried out by [`Jerin Sunny`](https://www.linkedin.com/in/jerin-sunny/){:target="_blank"} and [`Shakir Zari`](https://www.linkedin.com/in/shakir-zari/){:target="_blank"} and published on behalf of the [`FEV Secure Lab`](https://in.linkedin.com/company/fev-india){:target="_blank"}.
 
 * * *
     
-show size and strings command
+<!-- show size and strings command
 
-we proceeded with analysing the binary screenshot (ghidra)
+we proceeded with analysing the binary screenshot (ghidra) -->
 
 
 
