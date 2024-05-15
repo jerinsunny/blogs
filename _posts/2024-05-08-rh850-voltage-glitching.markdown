@@ -92,17 +92,12 @@ The below figure shows the ID Code Check command where the 16-byte password ente
 </figure>
 
 
-We obtained a RH850 dev board and read the memory to understand the commands after the ID Code Authentication is successful. Once the positive response is obtained, the RFP tool reads the device ID and it proceeds to read memory from the user specified area. One thing which we observed is that the memory is read in chunks. The RFP tool sends the start and end memory adrress from where the data needs to be read. Once the data is received , the address is incremented and the command is send again.
+We obtained a RH850 dev board and read the memory to understand the commands after the ID Code Authentication is successful. Once the positive response is obtained, the RFP tool reads the device ID and it proceeds to read memory from the user specified area. One thing which we observed is that the memory is read in chunks. The RFP tool sends the start and end memory address from where the data needs to be read. Once the data is received , the address is incremented and the command is send again.
 
 
 # RH850 Power Supply Circuit
 For `Voltage Glitching` attack, we need to target the power supply of the MCU. Every MCU has a specifically designed power management/ regulation system, which is used for powering the internal circuitry, peripherals etc. The power supply scheme of RH850/F1L is shown in the below figure.
 
-<!-- {:style="text-align:center;"}
-![My helpful screenshot]({{"assets/rh850_vglitch/images/power_supply.webp" | absolute_url }}){: width="600" loading="lazy"} -->
-
-<!-- {% figure "assets/rh850_vglitch/images/power_supply.webp" caption %}
-{% endfigure %} -->
 
 <figure style="text-align:center;">
 <img src="../../../assets/rh850_vglitch/images/power_supply.webp" width="60%" > 
