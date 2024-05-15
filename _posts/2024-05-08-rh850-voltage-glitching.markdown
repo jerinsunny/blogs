@@ -24,9 +24,9 @@ Renesas RH850/F1L: Extracting Firmware in Automotive ECU with Voltage Glitching"
 Renesas RH850/F1L: Breaking ID Authentication in Automotive ECU with Voltage Glitching" -->
 
 
-# Introduction /Overview 
+# Introduction
  
-In this blog, we describe the security research performed on an Automotive ECU, where we extracted the firmware by performing a voltage glitching attack. The target ECU featured a Renesas RH850/F1L series MCU with debug access disabled. 
+In previous [blog](https://jerinsunny.github.io/stm32_vglitch/){:target="_blank"}, we discussed how voltage glitching attack can be used to bypass Read Protection on STM32F4 series MCUs. In this blog, we describe the security research performed on an Automotive ECU, where we extracted the firmware by performing a voltage glitching attack. The target ECU featured a Renesas RH850/F1L series MCU with protected debug access. 
 
 <figure style="text-align:center;">
 <img src="../../../assets/rh850_vglitch/images/setup.webp" width="100%" > 
@@ -34,7 +34,7 @@ In this blog, we describe the security research performed on an Automotive ECU, 
 
 # Target Reconnaissance
 
-The target device under consideration for this security research is an Body Control Module (BCM) Automotive ECU. BCM in a car is responsible for controlling the power windows/mirrors, immobilizer system, central locking, etc. The main objective of this security research was to extract the firmware from the ECU. We tried to extract memory contents thorugh CAN interface but it was protected with security access.
+The target device under consideration for this security research is an Body Control Module (BCM) Automotive ECU. BCM in a car is responsible for controlling the power windows/mirrors, immobilizer system, central locking, etc. The main objective of this security research was to extract the firmware from the ECU. We tried to extract memory contents through CAN interface but it was protected with security access.
 
 Next we disassembled the ECU to analyze the PCB and its components. The ECU contains RH850/F1L series MCU from Renesas. We first checked if there is any open debug port is available. Using E1 debugger and a bit of soldering, we established connectivity with the target device via the JTAG Pins and the tester PC. We followed the steps as mentioned in [Renesas Flash Programmer User Manual](https://www.renesas.com/us/en/document/mat/renesas-flash-programmer-v315-flash-memory-programming-software-users-manual?), this prompted us to enter the 16 bytes ID Code as shown below .
 
@@ -53,7 +53,7 @@ Next we disassembled the ECU to analyze the PCB and its components. The ECU cont
 </figure>
 
 ### Fault Injection to Bypass Debug Protection
-> Since the debug access was locked, a potential way to bypass it was through fault injection attack. There is a lot research publicly available , where fault injection attacks were used to bypass debug protection. There were some fault injection attack carried out especially on Renesas MCUs, one of them is by Willem Melching on an [automotive ECU](https://icanhack.nl/blog/rh850-glitch/) , where the serial programming interface itself was disabled but was successfully bypassed thoirugh fault injection. Our target is a  bit different as the serial programming is not disabled but is protected by an ID Code Authentication. The other research is by Franck Jullien's on [Renesas RX65](https://www.collshade.fr/articles/reneshack/rx_glitch_article.html), where the architecture, boot ROM and debug protocol(single-wire FINE) is different as compared to RH850.
+> Since the debug access was locked, a potential way to bypass it was through fault injection attack. There is a lot research publicly available , where fault injection attacks were used to bypass debug protection. There were some fault injection attack carried out especially on Renesas MCUs, one of them is by Willem Melching on an [automotive ECU](https://icanhack.nl/blog/rh850-glitch/) , where the serial programming interface itself was disabled but was successfully bypassed through fault injection. Our target is a  bit different as the serial programming is not disabled but is protected by an ID Code Authentication. The other research is by Franck Jullien's on [Renesas RX65](https://www.collshade.fr/articles/reneshack/rx_glitch_article.html), where the architecture, boot ROM and debug protocol(single-wire FINE) is different as compared to RH850.
 
 
 The datasheet indicated the MCU has 3 operating modes , out of which one is the Serial Programming Mode. 
@@ -96,7 +96,7 @@ We obtained a RH850 dev board and read the memory to understand the commands aft
 
 
 # RH850 Power Supply Circuit
-For `Voltage Glitching` attack, we need to target the power supply of the MCU. Every MCU has a specifically designed power management/ regulation system, which is used for powering the internal circuitry, peripherals etc. The power supply scheme of RH850/F1L is shown in the below figure.
+For `Voltage Glitching` attack, we need to target the power supply of the MCU. Every MCU has a specifically designed power management/regulation system, which is used for powering the internal circuitry, peripherals etc. The power supply scheme of RH850/F1L is shown in the below figure.
 
 
 <figure style="text-align:center;">
@@ -132,7 +132,7 @@ A skeleton of the glitcher software is shown below
 def send_IDCodeCheck_command(){
     # send 16-byte ID code to the target
     # read the response and return it
-    cw_inject_glitch(glitch_parameters) #inject glitch with the provided paramters
+    cw_inject_glitch(glitch_parameters) #inject glitch with the provided parameters
     return response
 }
 main(){
@@ -140,7 +140,7 @@ main(){
         reset_target()  # reset the target
         send_initial_commands() # send commands required for synchronization, setting bitrate, main clock frequency etc
         response=send_IDCodeCheck_command()
-        if response == postive:
+        if response == positive:
             read_device_id() # read device id
             read_memory()# read memory region in chunks
             exit()
@@ -153,7 +153,7 @@ main(){
 
 Once the hardware and software glitch setup is done, we ran the setup for obtaining initial characterization. The key parameters to be obtained for voltage glitching are - Glitch Offset and Glitch Width. Observe the glitch on an oscilloscope to corelate the software glitch parameters with the actual glitch impact. Narrow down the glitch parameters after each run based on the characterization results obtained.
 
-After the initial characterization was obtained, we replaced the capacitors at the glitch injection point to obtain more precise and desirable glitch. Even after few glitch cycle runs, we didn't obtain any fruitful results, so we decided to look more into the glitch parameters. We observed that the glitch voltage levels were not varying precisely  as required. With Chipwhisperer Lite we were not able to control glitch voltage level precisely. So we modified a circuitry  in CW which allowed us to control the glitch voltage levels more precisely as shown below.
+After the initial characterization was obtained, we replaced the capacitors at the glitch injection point to obtain more precise and desirable glitch. Even after few glitch cycle runs, we didn't obtain any fruitful results, so we decided to look more into the glitch parameters. We observed that the glitch voltage levels were not varying precisely  as required. With `Chipwhisperer Lite` (CW) we were not able to control glitch voltage level precisely. So we modified a circuitry in CW which allowed us to control the glitch voltage levels more precisely as shown below.
 
 <video class="center" width="60%" autoplay loop muted >
   <source src="../../../assets/rh850_vglitch/gifs/glitch.webm" type="video/webm" />
