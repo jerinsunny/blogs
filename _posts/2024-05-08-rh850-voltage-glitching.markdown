@@ -16,13 +16,13 @@ In the previous [blog](https://jerinsunny.github.io/stm32_vglitch/){:target="_bl
 
 # Target Reconnaissance
 
-The target device under consideration for this security research is a Body Control Module (BCM) Automotive ECU. BCM in a vehicle is responsible for controlling the power windows/mirrors, immobilizer system, central locking, etc. The main objective of this security research was to extract the firmware from the ECU and obtain any confidential information such as secret keys etc. We tried to extract memory contents through CAN interface, but it was protected with security access .
+The target device under consideration for this security research is a Body Control Module (BCM) Automotive ECU. BCM in a vehicle is responsible for controlling the power windows/mirrors, immobilizer system, central locking, etc. The main objective of this security research was to extract the firmware from the ECU and obtain any confidential information such as secret keys etc. We tried to extract memory contents through CAN interface, but it was protected with security access.
 
-Next, we disassembled the ECU to analyze the PCB and its components. The ECU contains RH850/F1L series MCU from Renesas. We first checked if there was any open debug port available. Using Renesas E1 debugger and a bit of soldering, we established connectivity with the target device via the JTAG Pins and the tester PC. We followed the steps as mentioned in [Renesas Flash Programmer User Manual](https://www.renesas.com/us/en/document/mat/renesas-flash-programmer-v315-flash-memory-programming-software-users-manual?), this prompted us to enter the 16 bytes ID Code as shown below.
+Next, we disassembled the ECU to analyze the PCB and its components. The ECU contains RH850/F1L series MCU from Renesas. We first checked if there was any open debug port available. Using Renesas E1 debugger and a bit of soldering, we established connectivity with the target device via the JTAG Pins and the tester PC. We followed the steps mentioned in [Renesas Flash Programmer User Manual](https://www.renesas.com/us/en/document/mat/renesas-flash-programmer-v315-flash-memory-programming-software-users-manual?), which prompted us to enter the 16 bytes ID Code as shown below.
 
 <figure style="text-align:center;">
 <img src="../../../assets/rh850_vglitch/images/idcode_prompt.webp" width="50%" > 
-<figcaption>Authentication Code Prompt </figcaption>
+<figcaption>ID Code Authentication Code Prompt </figcaption>
 </figure>
 
 
@@ -35,7 +35,7 @@ Next, we disassembled the ECU to analyze the PCB and its components. The ECU con
 </figure>
 
 ### Fault Injection to Bypass Debug Protection
-> Since the debug access was locked, a potential way to bypass it was through fault injection attack. There are lot of research publicly available, where fault injection attacks were used to bypass debug protection. There were some fault injection attack carried out especially on Renesas MCUs, one of them is by Willem Melching on an [automotive ECU](https://icanhack.nl/blog/rh850-glitch/), where the serial programming interface itself was disabled but was successfully bypassed through fault injection. Our target is a  bit different as the serial programming is not disabled but is protected by an ID Code Authentication. The other research is by Franck Jullien's on [Renesas RX65](https://www.collshade.fr/articles/reneshack/rx_glitch_article.html), where the architecture, boot ROM and debug protocol (single-wire FINE) is different as compared to RH850.
+> Since the debug access was locked, a potential way to bypass it was through fault injection attack. There are lot of research publicly available, where fault injection attacks were used to bypass debug protection. There were some fault injection attacks carried out especially on Renesas MCUs, one of them is by Willem Melching on an [automotive ECU](https://icanhack.nl/blog/rh850-glitch/), where the serial programming interface itself was disabled but was successfully bypassed through fault injection. Our target is a  bit different as the serial programming is not disabled but is protected by an ID Code Authentication. The other research is by Franck Jullien's on [Renesas RX65](https://www.collshade.fr/articles/reneshack/rx_glitch_article.html), where the architecture, boot ROM and debug protocol (single-wire FINE) is different as compared to RH850.
 
 
 The datasheet indicated the MCU has 3 operating modes, out of which one is the Serial Programming Mode. 
@@ -51,7 +51,7 @@ As mentioned above RH850 uses 2 Wire protocol in serial programming mode. We hoo
 
 The following were our observations:
 ```text
-The communication is the form of commands which has a predefined packet structure.
+The communication is the form of commands which have a predefined packet structure.
 Each command starts with 0x81 or 0x01 byte, followed by the length of the command.
 Each command ends with a constant 0x03, preceded by a 1 byte checksum.
 ```
@@ -74,7 +74,7 @@ The below figure shows the ID Code Check command where the 16-byte password ente
 </figure>
 
 
-We obtained a RH850 dev board and read the memory(Code flash and Data Flash) to understand the commands for the same, which is usually performed after the ID Code Authentication is successful. Once the positive response is obtained, the RFP tool reads the device ID, and it proceeds to read memory from the user specified area. One thing which we observed is that the memory is read in chunks. The RFP tool sends the start and end memory address from where the data needs to be read. Once the data is received, the address is incremented, and the command is sent again.
+We obtained a RH850 dev board and read the memory (Code flash and Data Flash) to understand the commands for the same, which is usually performed after the ID Code Authentication is successful. Once the positive response is obtained, the RFP tool reads the device ID, and it proceeds to read memory from the user specified area. One thing which we observed is that the memory is read in chunks. The RFP tool sends the start and end memory address from where the data needs to be read. Once the data is received, the address is incremented, and the command is sent again.
 
 
 # RH850 Power Supply Circuit
@@ -93,11 +93,11 @@ We chose ISOVCL as the glitch injection points because as per the power supply s
 
 # Glitch Setup
 ## Hardware Setup
-Every system has components designed to specifically maintain its operating voltage at the appropriate levels, such as decoupling capacitors. One of the challenges/requirements with voltage glitching is to modify/tamper the hardware circuitry in order to overcome the protection offered by these components. This includes removal of some components or replacing them with custom components, as well as selecting the glitch injection point.
+Every system has components designed to specifically maintain its operating voltage at the appropriate levels, such as decoupling capacitors. One of the challenges/requirements with voltage glitching is to modify/tamper with the hardware circuitry to overcome the protection offered by these components. This includes removal of some components or replacing them with custom components, as well as selecting the glitch injection point.
 
 As mentioned above we selected ISOVCL as the glitch injection point. The decoupling capacitors on ISOVCL were replaced, which would increase the impact of our glitch on the target. The values of which were chosen following comprehensive research to ensure desired glitch is obtained.
 
-We used `Chipwhisperer Lite` to generate the glitch required for our target. The glitcher software on `Chipwhisperer Lite` communicates to the target serially. The  glitch output of Chipwhisperer is connected to the glitch injection point. The hardware setup is shown in the figure below:
+We used [`Chipwhisperer Lite (CW)`](https://rtfm.newae.com/Capture/ChipWhisperer-Lite/) to generate the glitch required for our target. The glitcher software on `Chipwhisperer Lite` communicates to the target serially. The  glitch output of Chipwhisperer is connected to the glitch injection point. The hardware setup is shown in the figure below:
 
 
 <figure style="text-align:center;">
@@ -133,16 +133,16 @@ main(){
 ```
 # Glitching the Target
 
-Once the hardware and software glitch setup is done, we ran the setup for obtaining initial characterization. The key parameters to be obtained for voltage glitching are - Glitch Offset and Glitch Width. Observe the glitch on an oscilloscope to correlate the software glitch parameters with the actual glitch impact. Narrow down the glitch parameters after each run based on the characterization results obtained.
+Once the hardware and software glitch setup is done, we ran the setup for obtaining initial characterization. The key parameters to be obtained for voltage glitching are - Glitch Offset, Glitch Width and Glitch Voltage. Observe the glitch on an oscilloscope to correlate the software glitch parameters with the actual glitch impact. Narrow down the glitch parameters after each run based on the characterization results obtained.
 
-After the initial characterization was obtained, we replaced the capacitors at the glitch injection point to obtain more precise and desirable glitch. Even after few glitch cycle runs, we didn't obtain any fruitful results, so we decided to look more into the glitch parameters. We observed that the glitch voltage levels were not varying precisely  as required. With `Chipwhisperer Lite` (CW) we were not able to control glitch voltage level precisely. So, we modified a circuitry in CW which allowed us to control the glitch voltage levels more precisely as shown below.
+After the initial characterization was obtained, we replaced the capacitors at the glitch injection point to obtain more precise and desirable glitch. Even after few glitch cycle runs, we didn't obtain any fruitful results, so we decided to look more into the glitch parameters. We observed that the glitch voltage levels were not varying precisely  as required. With `Chipwhisperer Lite` we were not able to control glitch voltage level precisely. So, we modified a circuitry in CW which allowed us to control the glitch voltage levels more precisely as shown below.
 
 <video class="center" width="60%" autoplay loop muted >
   <source src="../../../assets/rh850_vglitch/gifs/glitch.webm" type="video/webm" />
 </video>
 
 
-After many glitch runs, we identified that Glitch Width should be under 100ns and the glitch should be injected as soon as the ID Code Check command ends.  
+After many glitch runs, we identified that Glitch Width should be under 100ns, and the glitch should be injected as soon as the ID Code Check command ends.  
 
 # Glitched Successfully
 
@@ -166,7 +166,7 @@ After extracting both the code flash and data flash, we proceeded with reverse e
 
 # Conclusion
 
-In this blog we showed that how voltage glitching attack can be used to extract firmware for Read Protected MCU. A summary of the key findings are described below:
+In this blog we showed how voltage glitching attack can be used to extract firmware from Read Protected MCU. A summary of the key findings are described below:
 
 * Successfully bypassed 16-byte ID Code authentication to extract firmware.
 * Reverse engineering the firmware, we obtained secret keys, used to unlock Secure Diagnostic Services.
