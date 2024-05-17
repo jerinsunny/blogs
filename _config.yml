@@ -5,6 +5,7 @@ url: https://jerinsunny.github.io/blogs
 
 baseurl: /blogs
 destination: ./_site
+google_analytics: G-DW62RVHCXG
 
 
 owner : Jerin Sunny
