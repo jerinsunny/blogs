@@ -4,7 +4,7 @@ $admonitions:
     //class (type), icon filename, icon/border color, title bg color
     ('note', 'pen_solid.svg')
     ('abstract', 'align-left-solid.svg')
-    ('info', 'info-circle-solid.svg', '#00b0ff', '#293d52')
+    ('info', 'circle-info-solid.svg', '#00b0ff', '#293d52')
     ('tip', 'fire-solid.svg', '#ff9100', '#433a38')
     ('success', 'check-circle-solid.svg', '#00c953', '#294040')
     ('question', 'question-circle-solid.svg', '#00b8d4', '#293e4e')
@@ -14,6 +14,7 @@ $admonitions:
     ('bug', 'bug-solid.svg', '#f50057', '#553c45')
     ('example', 'list-ol-solid.svg', '#9e9e9e', '#4c4c4c')
     ('quote', 'quote-right-solid.svg', '#9e9e9e', '#4c4c4c')
+    ('timeline', 'timeline-solid.svg', '#ff9100', '#433a38')
 ;
 .admonition {
 	margin: 1.5625em 0;
