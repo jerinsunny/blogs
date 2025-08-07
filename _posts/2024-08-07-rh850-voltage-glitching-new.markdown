@@ -6,7 +6,7 @@ description: Breaking 16-byte ID Code Authentication for Firmware Extraction in 
 author: "Jerin Sunny"
 tags: ["hardware security", "fault injection", "automotive security"]
 categories: [hwsecurity, faultinjection]
-image: ../../../../../assets/rh850_vglitch/images/setup.webp
+image: ../../../../../blogs/assets/rh850_vglitch/images/setup.webp
 lang: en_US
 published: true
 ---
