@@ -4,7 +4,7 @@ title: Intercepting IoT TLS Traffic
 date:   2024-12-12 07:40:59 +0530
 tags: jekyll update
 author: Jerin Sunny
-published: true
+published: false
 ---
 
 This is the second part of the blog series on security research of Sonoff IoT Devices. In the previous blog, we detailed how to extract the firmware, modify it, and boot the modified firmware. This blog explores how we bypassed SSL pinning on the device to perform a man-in-the-middle attack, enabling us to intercept the device's traffic. Additionally, we also analyze the complete communication between the IoT device, cloud, and the app.
