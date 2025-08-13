@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Security Research Blogs
-description: Security Research Blogs
+description: "Security Research Blogs"
 author: "Jerin Sunny"
 tags: ["iot security", "hardware security", "automotive security "]
 lang: en_US
