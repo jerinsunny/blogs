@@ -1,6 +1,6 @@
 ---
 layout: postsonofffirmex
-date:   2024-11-05 07:40:59 +0530
+date:   2025-01-03 07:40:59 +0530
 title: Hacking Sonoff Smart Home IoT Device
 description: "CVE-2024-7206: Firmware extraction and Hardware SSL Pinning Bypass"
 author: "Jerin Sunny"
